@@ -29,9 +29,7 @@ public class UrlBuilder {
 
     private String getDateString(String Date) {
         int divDate = 0;
-        if (isDateValidFormat("MM/dd/yyyy", Date)) {
-            return Date;
-        } else {
+
             if (Date.equals("Yesterday")) {
                 divDate = -1;
 
@@ -41,16 +39,19 @@ public class UrlBuilder {
             } else if (Date.equals("Tomorrow")) {
                 divDate = 1;
 
-            } else {
-                throw new IllegalArgumentException();
+
+            } else if (isDateValidFormat("MM/dd/yyyy", Date)){
+                return Date;
             }
+
             DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
             Calendar cal = Calendar.getInstance();
             cal.add(Calendar.DATE, divDate);
             return dateFormat.format(cal.getTime());
         }
 
-    }
+
+
 
     private static boolean isDateValidFormat(String format, String value) {
         Date date = null;
@@ -61,7 +62,7 @@ public class UrlBuilder {
                 date = null;
             }
         } catch (ParseException ex) {
-            //           ex.printStackTrace();
+            throw new IllegalArgumentException();
         }
         return date != null;
     }

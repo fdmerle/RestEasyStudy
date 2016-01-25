@@ -26,12 +26,9 @@ public class WeatherObject implements Comparator<WeatherObject> {
     }
 
 
-    @Override
     public int compare(WeatherObject o1, WeatherObject o2) {
         return o2.temperature - o1.temperature;
     }
 }
-
-
 
 

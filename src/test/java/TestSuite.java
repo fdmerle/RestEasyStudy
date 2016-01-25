@@ -1,4 +1,3 @@
-import org.codehaus.jettison.json.JSONException;
 import org.testng.annotations.Test;
 
 /**
@@ -7,9 +6,10 @@ import org.testng.annotations.Test;
 public class TestSuite extends MainTest{
 
     @Test
-    public void test() throws JSONException {
+    public void test() {
 
-        senderObject.ReturnTemperasture("Yesterday","Krakow");
+        senderObject.ReturnTemperature("01/30/2016", "Krakow");
+        senderObject.ReturnTemperature("Yesterday", "Krakow");
         senderObject.ReturnWarmestCity("Yesterday");
     }
 }
