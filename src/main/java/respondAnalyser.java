@@ -9,21 +9,18 @@ import java.util.List;
 /**
  * Created by dmytro_moskalenko2 on 1/20/2016.
  */
-public class RespondAnalyser {
+public class respondAnalyser {
     private UrlBuilder urlBuilder = new UrlBuilder();
     private String url;
     private RestEasySender getRequest = new RestEasySender();
-
+    private JSONObject respondElement = null;
     public int ReturnTemperature(String Date, String City){
 
 
         url = urlBuilder.returnUrl(City, Date);
-        JSONObject respondObject = null;
         int temperature=0;
         try {
-            respondObject = new JSONObject(getRequest.SendGetRequest(url));
-            JSONObject temperatureGroup = respondObject.getJSONObject("main");
-            temperature = temperatureGroup.getInt("temp");
+            temperature=new JSONObject(getRequest.SendGetRequest(url)).getJSONObject("main").getInt("temp");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -32,12 +29,12 @@ public class RespondAnalyser {
         return temperature;
     }
 
-    public String ReturnWarmestCity(String Date){
+    public String returnWarmestCity(String Date){
 
         int i;
         List<WeatherObject> respondObject = new ArrayList<WeatherObject>();
         url = urlBuilder.returnUrl(Date);
-        JSONObject respondElement = null;
+
         try {
             respondElement = new JSONObject(getRequest.SendGetRequest(url));
 

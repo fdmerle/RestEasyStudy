@@ -1,3 +1,4 @@
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
@@ -10,6 +11,10 @@ public class TestSuite extends MainTest{
 
         senderObject.ReturnTemperature("01/30/2016", "Krakow");
         senderObject.ReturnTemperature("Yesterday", "Krakow");
-        senderObject.ReturnWarmestCity("Yesterday");
+        senderObject.returnWarmestCity("Yesterday");
+
+        Assert.assertEquals(senderObject.ReturnTemperature("01/30/2016", "Krakow")<100,true);
+        Assert.assertEquals(senderObject.returnWarmestCity("Yesterday").equals("Krakow"),true);
+
     }
 }

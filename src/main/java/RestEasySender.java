@@ -6,10 +6,13 @@ import javax.ws.rs.core.Response;
 
 
 public class RestEasySender {
+    private ResteasyClient client;
 
+    public RestEasySender() {
+        client = new ResteasyClientBuilder().build();
+    }
 
     public String SendGetRequest(String url) {
-        ResteasyClient client = new ResteasyClientBuilder().build();
         ResteasyWebTarget target = client.target(url);
         Response response = target.request().get();
         String value = response.readEntity(String.class);
