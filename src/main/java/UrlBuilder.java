@@ -29,6 +29,8 @@ public class UrlBuilder {
     }
 
     public String returnUrl(String requestDate) {
+        cityCodes = "";
+
         for (i = 0; i < cities.size() - 2; i++) {
             cityCodes = cityCodes + cities.get(i) + ",";
         }
