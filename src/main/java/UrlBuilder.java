@@ -19,7 +19,7 @@ public class UrlBuilder {
         add("3081368");
         add("3099434");
     }};
-    int i;
+    private int i;
     private String cityCodes = "";
 
 
@@ -31,19 +31,24 @@ public class UrlBuilder {
     public String returnUrl(String requestDate) {
         cityCodes = "";
 
-        for (i = 0; i < cities.size() - 2; i++) {
-            cityCodes = cityCodes + cities.get(i) + ",";
+
+
+
+        for (String item:cities) {
+            cityCodes = cityCodes + item + ",";
         }
-        cityCodes = cityCodes + cities.get(i + 1);
+        cityCodes = cityCodes.substring(0, cityCodes.length()-1);
+
+
 
         dateForUrl = getDateString(requestDate);
-        return serviceUrl + "group?id=" + cityCodes + "," + "&units=metric&APPID=" + serviceToken;
+        return serviceUrl + "group?id=" + cityCodes + "&units=metric&APPID=" + serviceToken;
     }
 
     private String getDateString(String date) {
         int divDate = 0;
 
-       if (date.equals("Yesterday")) {
+        if (date.equals("Yesterday")) {
             divDate = -1;
 
         } else if (date.equals("Today")) {
@@ -51,6 +56,9 @@ public class UrlBuilder {
 
         } else if (date.equals("Tomorrow")) {
             divDate = 1;
+
+
+
 
         } else if (isDateValidFormat("MM/dd/yyyy", date)) {
             return date;

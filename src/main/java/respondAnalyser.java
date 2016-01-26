@@ -1,7 +1,9 @@
+import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -9,47 +11,71 @@ import java.util.List;
 /**
  * Created by dmytro_moskalenko2 on 1/20/2016.
  */
-public class respondAnalyser {
+
+public class RespondAnalyser {
     private UrlBuilder urlBuilder = new UrlBuilder();
-    private String url;
+    private String urlStr;
     private RestEasySender getRequest = new RestEasySender();
     private JSONObject respondElement = null;
-    public int ReturnTemperature(String Date, String City){
+    private ObjectMapper mapper = new ObjectMapper();
 
 
-        url = urlBuilder.returnUrl(City, Date);
-        int temperature=0;
+    public int returnTemperature(String Date, String City) {
+
+
+        urlStr = urlBuilder.returnUrl(City, Date);
+        String reqResult = getRequest.sendGetRequest(urlStr);
         try {
-            temperature=new JSONObject(getRequest.SendGetRequest(url)).getJSONObject("main").getInt("temp");
-        } catch (JSONException e) {
-            e.printStackTrace();
+            WeatherObject resultObj = mapper.readValue(reqResult, WeatherObject.class);
+            System.out.println(resultObj.getTemp());
+            return resultObj.getTemp();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+            return -1000;
         }
-
-        System.out.println(temperature);
-        return temperature;
     }
 
-    public String returnWarmestCity(String Date){
+    public String returnWarmestCity(String Date) {
 
         int i;
         List<WeatherObject> respondObject = new ArrayList<WeatherObject>();
-        url = urlBuilder.returnUrl(Date);
+        urlStr = urlBuilder.returnUrl(Date);
 
         try {
-            respondElement = new JSONObject(getRequest.SendGetRequest(url));
-
-        JSONArray result = respondElement.getJSONArray("list");
-        for (i = 0; i < result.length(); i++) {
-            JSONObject cityResult = result.getJSONObject(i).getJSONObject("main");
-            respondObject.add(new WeatherObject(result.getJSONObject(i).getString("name"), cityResult.getInt("temp_min")));
-        }
+            respondElement = new JSONObject(getRequest.sendGetRequest(urlStr));
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        JSONArray result = null;
+        try {
+            result = respondElement.getJSONArray("list");
+        } catch (JSONException e1) {
+            e1.printStackTrace();
+        }
+
+
+        for (i = 0; i < result.length(); i++) {
+            try {
+                WeatherObject resultObj = null;
+                try {
+                    resultObj = mapper.readValue(result.get(i).toString(), WeatherObject.class);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                respondObject.add(resultObj);
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        }
+
         Collections.sort(respondObject, new WeatherObject());
-        System.out.println(respondObject.get(0).getCityName());
-        return respondObject.get(0).getCityName();
+
+        System.out.println(respondObject.get(0).getName());
+        return respondObject.get(0).getName();
 
     }
 
 }
+
+

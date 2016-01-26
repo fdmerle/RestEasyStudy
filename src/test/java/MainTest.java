@@ -3,5 +3,5 @@
  */
 public class MainTest {
 
-    public respondAnalyser senderObject = new respondAnalyser();
+    public RespondAnalyser senderObject = new RespondAnalyser();
 }

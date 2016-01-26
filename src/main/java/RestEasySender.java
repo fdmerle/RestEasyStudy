@@ -12,7 +12,7 @@ public class RestEasySender {
         client = new ResteasyClientBuilder().build();
     }
 
-    public String SendGetRequest(String url) {
+    public String sendGetRequest(String url) {
         ResteasyWebTarget target = client.target(url);
         Response response = target.request().get();
         String value = response.readEntity(String.class);
