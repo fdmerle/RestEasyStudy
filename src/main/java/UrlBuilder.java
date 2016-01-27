@@ -32,57 +32,64 @@ public class UrlBuilder {
         cityCodes = "";
 
 
-
-
-        for (String item:cities) {
+        for (String item : cities) {
             cityCodes = cityCodes + item + ",";
         }
-        cityCodes = cityCodes.substring(0, cityCodes.length()-1);
-
+        cityCodes = cityCodes.substring(0, cityCodes.length() - 1);
 
 
         dateForUrl = getDateString(requestDate);
         return serviceUrl + "group?id=" + cityCodes + "&units=metric&APPID=" + serviceToken;
     }
 
+
     private String getDateString(String date) {
-        int divDate = 0;
-
-        if (date.equals("Yesterday")) {
-            divDate = -1;
-
-        } else if (date.equals("Today")) {
-            divDate = 0;
-
-        } else if (date.equals("Tomorrow")) {
-            divDate = 1;
 
 
+        switch (date) {
 
+            case "Yesterday":
+                return dateCalculation(-1);
 
-        } else if (isDateValidFormat("MM/dd/yyyy", date)) {
-            return date;
+            case "Today":
+                return dateCalculation(0);
+
+            case "Tomorrow":
+                return dateCalculation(1);
+
+            default:
+                if (isDateValidFormat("MM/dd/yyyy", date)) {
+                    return date;
+
+                }
         }
-
-        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DATE, divDate);
-        return dateFormat.format(cal.getTime());
+        return " ";
     }
 
 
     private boolean isDateValidFormat(String format, String value) {
         Date date = null;
+
+        SimpleDateFormat sdf = new SimpleDateFormat(format);
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat(format);
             date = sdf.parse(value);
-            if (!value.equals(sdf.format(date))) {
-                date = null;
-            }
-        } catch (ParseException ex) {
-            throw new IllegalArgumentException();
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
+        if (!value.equals(sdf.format(date))) {
+            date = null;
+        }
+
         return date != null;
+    }
+
+    private String dateCalculation(int divDate) {
+
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, divDate);
+        return dateFormat.format(cal.getTime());
+
     }
 }
 

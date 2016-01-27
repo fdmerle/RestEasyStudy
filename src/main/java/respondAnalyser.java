@@ -19,14 +19,20 @@ public class RespondAnalyser {
     private JSONObject respondElement = null;
     private ObjectMapper mapper = new ObjectMapper();
 
-
     public int returnTemperature(String Date, String City) {
-
-
         urlStr = urlBuilder.returnUrl(City, Date);
         String reqResult = getRequest.sendGetRequest(urlStr);
+        return temperatureParsing(reqResult);
+    }
+
+    public String returnWarmestCity(String Date) {
+        urlStr = urlBuilder.returnUrl(Date);
+        return warmestCityParsing(urlStr);
+    }
+
+    private int temperatureParsing(String JSONRespond) {
         try {
-            WeatherObject resultObj = mapper.readValue(reqResult, WeatherObject.class);
+            WeatherObject resultObj = mapper.readValue(JSONRespond, WeatherObject.class);
             System.out.println(resultObj.getTemp());
             return resultObj.getTemp();
         } catch (IOException e1) {
@@ -35,47 +41,32 @@ public class RespondAnalyser {
         }
     }
 
-    public String returnWarmestCity(String Date) {
-
+    private String warmestCityParsing(String JSONRespond) {
         int i;
+        JSONArray result = null;
         List<WeatherObject> respondObject = new ArrayList<WeatherObject>();
-        urlStr = urlBuilder.returnUrl(Date);
-
         try {
-            respondElement = new JSONObject(getRequest.sendGetRequest(urlStr));
+            respondElement = new JSONObject(getRequest.sendGetRequest(JSONRespond));
+            result = respondElement.getJSONArray("list");
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        JSONArray result = null;
-        try {
-            result = respondElement.getJSONArray("list");
-        } catch (JSONException e1) {
-            e1.printStackTrace();
-        }
-
-
         for (i = 0; i < result.length(); i++) {
+
+            WeatherObject resultObj = null;
+
             try {
-                WeatherObject resultObj = null;
-                try {
-                    resultObj = mapper.readValue(result.get(i).toString(), WeatherObject.class);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                respondObject.add(resultObj);
-            } catch (IOException e1) {
-                e1.printStackTrace();
+                resultObj = mapper.readValue(result.get(i).toString(), WeatherObject.class);
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
             }
+            respondObject.add(resultObj);
         }
-
         Collections.sort(respondObject, new WeatherObject());
-
         System.out.println(respondObject.get(0).getName());
         return respondObject.get(0).getName();
-
     }
-
 }
 
 
