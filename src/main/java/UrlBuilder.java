@@ -19,7 +19,7 @@ public class UrlBuilder {
         add("3081368");
         add("3099434");
     }};
-    private int i;
+
     private String cityCodes = "";
 
 
