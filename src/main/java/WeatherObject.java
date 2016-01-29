@@ -7,7 +7,7 @@ import java.util.Comparator;
  * Created by dmytro_moskalenko2 on 1/18/2016.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-//implements Comparator<WeatherObject>
+
 public class WeatherObject implements Comparator<WeatherObject> {
     private String name;
 

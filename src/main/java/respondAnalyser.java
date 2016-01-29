@@ -1,7 +1,4 @@
 import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,60 +10,53 @@ import java.util.List;
  */
 
 public class RespondAnalyser {
+
     private UrlBuilder urlBuilder = new UrlBuilder();
-    private String urlStr;
     private RestEasySender getRequest = new RestEasySender();
-    private JSONObject respondElement = null;
     private ObjectMapper mapper = new ObjectMapper();
 
-    public int returnTemperature(String Date, String City) {
-        urlStr = urlBuilder.returnUrl(City, Date);
-        String reqResult = getRequest.sendGetRequest(urlStr);
-        return temperatureParsing(reqResult);
+    private String requestSender( String city,String date) {
+        return getRequest.sendGetRequest(urlBuilder.returnUrl(city, date));
     }
 
-    public String returnWarmestCity(String Date) {
-        urlStr = urlBuilder.returnUrl(Date);
-        return warmestCityParsing(urlStr);
-    }
+    private JsonRespondObject objectForTemperatureObtaining(String reqResult) {
 
-    private int temperatureParsing(String JSONRespond) {
         try {
-            WeatherObject resultObj = mapper.readValue(JSONRespond, WeatherObject.class);
-            System.out.println(resultObj.getTemp());
-            return resultObj.getTemp();
-        } catch (IOException e1) {
-            e1.printStackTrace();
-            return -1000;
-        }
-    }
-
-    private String warmestCityParsing(String JSONRespond) {
-        int i;
-        JSONArray result = null;
-        List<WeatherObject> respondObject = new ArrayList<WeatherObject>();
-        try {
-            respondElement = new JSONObject(getRequest.sendGetRequest(JSONRespond));
-            result = respondElement.getJSONArray("list");
-        } catch (JSONException e) {
+            return mapper.readValue(reqResult, JsonRespondObject.class);
+        } catch (IOException e) {
             e.printStackTrace();
+            return null;
         }
-
-        for (i = 0; i < result.length(); i++) {
-
-            WeatherObject resultObj = null;
-
-            try {
-                resultObj = mapper.readValue(result.get(i).toString(), WeatherObject.class);
-            } catch (IOException | JSONException e) {
-                e.printStackTrace();
-            }
-            respondObject.add(resultObj);
-        }
-        Collections.sort(respondObject, new WeatherObject());
-        System.out.println(respondObject.get(0).getName());
-        return respondObject.get(0).getName();
     }
+
+    public double temperatureObtaining(String _date, String city) {
+        String date=urlBuilder.getDateString(_date);
+        String jsonText = requestSender(city, date);
+        JsonRespondObject allObjects = objectForTemperatureObtaining(jsonText);
+        WeatherListElement objectForCurrentDate = allObjects.returnElementByDate(date);
+        double temperature = objectForCurrentDate.getTemp().getDayTemp();
+        System.out.println(temperature);
+        return temperature;
+
+    }
+
+
+    public String warmestCityObtaining(String _date) {
+        String date=urlBuilder.getDateString(_date);
+        List <PairsOfCityTemperature> element= new ArrayList<>();
+        ArrayList<String> cities = new ArrayList<String>() {{
+            add("Krakow");
+            add("Wroclaw");
+            add("Gdansk");
+        }};
+        for(String item:cities){
+            element.add(new PairsOfCityTemperature(item,temperatureObtaining(date,item)));
+       }
+        Collections.sort(element);
+        System.out.println(element.get(0).getCity());
+        return element.get(0).getCity();
+    }
+
 }
 
 
