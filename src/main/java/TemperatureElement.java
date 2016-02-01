@@ -8,10 +8,12 @@ import org.codehaus.jackson.annotate.JsonSetter;
 
 public class TemperatureElement {
     private double dayTemp;
+
     @JsonSetter("day")
     public void setDayTemp(double _dayTemp) {
         dayTemp = _dayTemp;
     }
+
     public double getDayTemp() {
         return dayTemp;
     }

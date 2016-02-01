@@ -9,16 +9,12 @@ import java.util.Calendar;
 public class UrlBuilder {
 
 
-
-
     public String returnUrl(String requestCity) {
         String serviceUrl = "http://api.openweathermap.org/data/2.5/";
         String serviceToken = "7e6c68e6843af56620fcd8e6a14d62b1";
         System.out.println(serviceUrl + "forecast/daily?q=" + requestCity + "&cnt=16&units=metric&APPID=" + serviceToken);
         return serviceUrl + "forecast/daily?q=" + requestCity + "&cnt=16&units=metric&APPID=" + serviceToken;
     }
-
-
 
 
     public String getDateString(String date) {
@@ -37,9 +33,8 @@ public class UrlBuilder {
 
         }
         if (isDateValidFormat("MM/dd/yyyy", date)) {
-                    return date;
-                }
-        else
+            return date;
+        } else
             return " ";
 
     }

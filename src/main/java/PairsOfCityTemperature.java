@@ -15,7 +15,8 @@ public class PairsOfCityTemperature implements Comparable<PairsOfCityTemperature
 
     @Override
     public int compareTo(PairsOfCityTemperature o) {
-        return temperature < o.temperature ? 1 : temperature > o.temperature ? -1 : 0;    }
+        return temperature < o.temperature ? 1 : temperature > o.temperature ? -1 : 0;
+    }
 
 
 }
