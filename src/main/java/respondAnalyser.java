@@ -12,15 +12,13 @@ import java.util.List;
 public class RespondAnalyser {
 
     private UrlBuilder urlBuilder = new UrlBuilder();
-    private RestEasySender getRequest = new RestEasySender();
-    private ObjectMapper mapper = new ObjectMapper();
-
-    private String requestSender( String city,String date) {
-        return getRequest.sendGetRequest(urlBuilder.returnUrl(city, date));
+    private String requestSender( String city) {
+        RestEasySender getRequest = new RestEasySender();
+        return getRequest.sendGetRequest(urlBuilder.returnUrl(city));
     }
 
     private JsonRespondObject objectForTemperatureObtaining(String reqResult) {
-
+        ObjectMapper mapper = new ObjectMapper();
         try {
             return mapper.readValue(reqResult, JsonRespondObject.class);
         } catch (IOException e) {
@@ -31,12 +29,10 @@ public class RespondAnalyser {
 
     public double temperatureObtaining(String _date, String city) {
         String date=urlBuilder.getDateString(_date);
-        String jsonText = requestSender(city, date);
+        String jsonText = requestSender(city);
         JsonRespondObject allObjects = objectForTemperatureObtaining(jsonText);
         WeatherListElement objectForCurrentDate = allObjects.returnElementByDate(date);
-        double temperature = objectForCurrentDate.getTemp().getDayTemp();
-        System.out.println(temperature);
-        return temperature;
+        return objectForCurrentDate.getTemp().getDayTemp();
 
     }
 

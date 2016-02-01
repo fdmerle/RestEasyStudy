@@ -8,15 +8,14 @@ import java.util.Calendar;
  */
 public class UrlBuilder {
 
-//    private String dateForUrl;
-    private String serviceUrl = "http://api.openweathermap.org/data/2.5/";
-    private String serviceToken = "7e6c68e6843af56620fcd8e6a14d62b1";
 
-    public String returnUrl(String requestCity, String requestDate) {
- //       dateForUrl = getDateString(requestDate);
- //       System.out.println(serviceUrl + "forecast/daily?q=" + requestCity + "&cnt=16&units=metric&APPID=" + serviceToken);
+
+
+    public String returnUrl(String requestCity) {
+        String serviceUrl = "http://api.openweathermap.org/data/2.5/";
+        String serviceToken = "7e6c68e6843af56620fcd8e6a14d62b1";
+        System.out.println(serviceUrl + "forecast/daily?q=" + requestCity + "&cnt=16&units=metric&APPID=" + serviceToken);
         return serviceUrl + "forecast/daily?q=" + requestCity + "&cnt=16&units=metric&APPID=" + serviceToken;
-
     }
 
 
@@ -36,13 +35,13 @@ public class UrlBuilder {
             case "Tomorrow":
                 return dateCalculation(1);
 
-            default:
-                if (isDateValidFormat("MM/dd/yyyy", date)) {
-                    return date;
-
-                }
         }
-        return " ";
+        if (isDateValidFormat("MM/dd/yyyy", date)) {
+                    return date;
+                }
+        else
+            return " ";
+
     }
 
 

@@ -1,3 +1,4 @@
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
@@ -8,12 +9,15 @@ public class TestSuite extends MainTest{
     @Test
     public void test() {
 
-        senderObject.temperatureObtaining( "01/30/2016","Wroclaw");
-        senderObject.warmestCityObtaining("01/30/2016");
 
-        /*Assert.assertEquals(senderObject.requestSender("01/25/2016", "Krakow"),8);
-        Assert.assertEquals(senderObject.requestSender("01/25/2016", "Wroclaw"),11);
-        Assert.assertEquals(senderObject.requestSender("01/25/2016", "Gdansk"),8);*/
-        //Assert.assertEquals(senderObject.returnWarmestCity("01/25/2016"),"Krakow");
+        Assert.assertEquals(senderObject.warmestCityObtaining("Tomorrow"),"Wroclaw");
+        Assert.assertTrue(senderObject.temperatureObtaining( "02/05/2016","Wroclaw")>-100);
+        Assert.assertTrue(senderObject.temperatureObtaining( "02/05/2016","Wroclaw")<100);
+        Assert.assertTrue(senderObject.temperatureObtaining( "Today","Wroclaw")<100);
+        Assert.assertEquals(senderObject.temperatureObtaining( "Tomorrow","Wroclaw"),12.94);
+        Assert.assertEquals(senderObject.temperatureObtaining( "Today","Wroclaw"),8.74);
     }
+
+
+
 }
